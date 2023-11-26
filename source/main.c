@@ -16,10 +16,15 @@ char filename[256];
 int w,h;
 
 /*variables for SDL_TTF features*/
+char text[0x200];
 TTF_Font *font=NULL;
-int font_size=16;
+int font_size=200;
 char font_filename[256];
 int renderstyle=TTF_STYLE_NORMAL;
+SDL_Color font_color= {0,0,0,255};
+SDL_Surface *text_surface;
+SDL_Texture *text_texture;
+SDL_Rect srcrect,dstrect;
 
 /* Draw a Gimpish background pattern to show transparency in the image */
 static void draw_background(SDL_Renderer *renderer, int w, int h)
@@ -93,18 +98,50 @@ int main(int argc, char **argv)
  }
 
  strcpy(font_filename,"font/DejaVuSansMono.ttf");
+ strcpy(font_filename,"font/editundo.ttf");
 
- font = TTF_OpenFont(font_filename, 18);
+ font = TTF_OpenFont(font_filename, font_size);
  if (font == NULL)
  {
   SDL_Log("Couldn't load %d pt font from %s: %s\n",
                     font_size, font_filename, SDL_GetError());
 
  }
+ else
+ {
+  printf("font file '%s'loaded\n",font_filename);
+ }
 
  TTF_SetFontStyle(font, renderstyle);
 
+ strcpy(text,"Chastity");
 
+ TTF_SizeText(font, text, &w, &h);
+
+ printf("To render string\n'%s'\nwill be size w=%d,h=%d\n",text,w,h);
+
+font_color.r=255;
+font_color.g=255;
+font_color.b=255;
+
+ text_surface=TTF_RenderText_Solid(font, text, font_color);
+
+ if(text_surface != NULL)
+ {
+  text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+  SDL_FreeSurface(text_surface);
+ }
+
+ srcrect.x=0;
+ srcrect.y=0;
+ srcrect.w=w;
+ srcrect.h=h;
+
+ dstrect=srcrect;
+ dstrect.x=400;
+ dstrect.y=280;
+
+ SDL_RenderCopy(renderer, text_texture, &srcrect, &dstrect);
 
  SDL_RenderPresent(renderer);
 
