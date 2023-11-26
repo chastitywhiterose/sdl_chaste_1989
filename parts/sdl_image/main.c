@@ -64,10 +64,15 @@ int main(int argc, char **argv)
  {
   SDL_Log("Couldn't load %s: %s\n", filename, SDL_GetError());
  }
- SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+ else
+ {
+  SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+  printf("Image '%s' loaded\n",filename);
+  printf("Texture dimensions w=%d,h=%d\n",w,h);
+ }
 
- printf("Image '%s' loaded\n",filename);
- printf("Texture dimensions w=%d,h=%d\n",w,h);
+ /* Display the image */
+ SDL_RenderCopy(renderer, texture, NULL, NULL);
 
  SDL_RenderPresent(renderer);
 
