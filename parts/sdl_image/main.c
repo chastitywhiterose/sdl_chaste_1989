@@ -7,6 +7,10 @@ SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Event e;
 
+SDL_Texture *texture;
+char filename[256];
+int w,h;
+
 /* Draw a Gimpish background pattern to show transparency in the image */
 static void draw_background(SDL_Renderer *renderer, int w, int h)
 {
@@ -51,6 +55,19 @@ int main(int argc, char **argv)
 
  /*Draw a background pattern in case the image has transparency*/
  draw_background(renderer, width, height);
+
+ /* Open the image file */
+
+ strcpy(filename,"ChastityWhiteRose_1280x720.png");
+ texture = IMG_LoadTexture(renderer, filename);
+ if (!texture)
+ {
+  SDL_Log("Couldn't load %s: %s\n", filename, SDL_GetError());
+ }
+ SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+
+ printf("Image '%s' loaded\n",filename);
+ printf("Texture dimensions w=%d,h=%d\n",w,h);
 
  SDL_RenderPresent(renderer);
 
