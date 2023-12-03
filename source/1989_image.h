@@ -58,3 +58,51 @@ void flag_fill()
  SDL_DestroyTexture(texture);
 
 }
+
+
+
+
+
+/*
+fills the screen with an image passed as a filename string
+*/
+
+void image_fill(char *filename)
+{
+
+ /* Open the image file */
+
+ texture = IMG_LoadTexture(renderer, filename);
+ if (!texture)
+ {
+  SDL_Log("Couldn't load %s: %s\n", filename, SDL_GetError());
+ }
+ else
+ {
+  SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+  printf("Image '%s' loaded\n",filename);
+  printf("Texture dimensions w=%d,h=%d\n",w,h);
+ }
+
+ /* Display the image */
+ SDL_RenderCopy(renderer, texture, NULL, NULL);
+
+ /*free the memory and delete the texture*/
+ SDL_DestroyTexture(texture);
+
+ SDL_RenderPresent(renderer);
+
+ loop=1;
+ while(loop)
+ {
+  while(SDL_PollEvent(&e))
+  {
+   if(e.type == SDL_QUIT){loop=0;}
+   if(e.type == SDL_KEYUP && e.key.repeat==0)
+   {
+    if(e.key.keysym.sym==SDLK_ESCAPE){loop=0;}
+   }
+  }
+ }
+
+}

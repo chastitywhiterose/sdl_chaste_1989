@@ -122,7 +122,7 @@ void show_grid_fill_rect_mono()
 
 void show_grid_draw_rect_mono()
 {
- int pixel,r,g,b;
+ int pixel;
  int x=0,y=0;
 
  int rmod=1; /*the rectangle modifier. 1 is usually best*/

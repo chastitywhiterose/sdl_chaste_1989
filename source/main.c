@@ -145,7 +145,7 @@ chaste_audio_init(); /*get the audio device ready*/
 
  /*load all songs*/
  x=0;
- while(x>songs)
+ while(x<songs)
  {
   music[x]=chaste_audio_load(music_files[x]);
   x++;
@@ -157,7 +157,49 @@ chaste_audio_init(); /*get the audio device ready*/
  song_index=0;
  chaste_audio_play(music[song_index]);
 
+
+ sprintf(filename,"imovelog.txt");
+ fp_input=fopen(filename,"rb+");
+ if(fp_input==NULL)
+ {
+  printf("Failed to open input file \"%s\".\n",filename);
+  printf("This is not an error. It just means input is keyboard only. \"%s\".\n",filename);
+ }
+ else
+ {
+  printf("input file \"%s\" is opened.\n",filename);
+  printf("Will read commands from this file before keyboard. \"%s\".\n",filename);
+ }
+
+
+ image_fill("./bitmap/ChastityWhiteRose_1280x720.png");
  sdl_chastetris();
+ image_fill("./bitmap/Chastity_Progress_Flag.png");
+
+  /*
+  After the game ends, we will attempt to save the movelog to a file.
+  Keeping the movelog in memory and only writing at the end speeds up the program and simplifies things.
+ */
+ 
+  /*open the file to record moves*/
+ sprintf(filename,"omovelog.txt");
+ fp=fopen(filename,"wb+");
+ if(fp==NULL){printf("Failed to create file \"%s\".\n",filename);}
+ else
+ {
+  x=0;
+  while(x<moves)
+  {
+   /*printf("%d %c\n",x,move_log[x]);*/
+   fputc(move_log[x],fp);
+   x++;
+  }
+ }
+
+ if(fp!=NULL){fclose(fp);}
+ if(fp_input!=NULL){fclose(fp_input);}
+
+
 
   /*unload and free the music*/
  x=0;
