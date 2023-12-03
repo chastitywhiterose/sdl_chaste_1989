@@ -53,6 +53,10 @@ void show_grid_draw_rect()
   while(x<grid_width)
   {
    pixel=temp_grid.array[x+y*grid_width];
+
+   if(pixel!=0) /*only draw if something is there*/
+   {
+
    r=(pixel&0xFF0000)>>16;
    g=(pixel&0x00FF00)>>8;
    b=(pixel&0x0000FF);
@@ -67,6 +71,7 @@ rect.h=block_size-rmod;
 
 SDL_RenderDrawRect(renderer,&rect);
 
+   }
 
    x+=1;
   }
@@ -112,6 +117,44 @@ void show_grid_fill_rect_mono()
  }
 }
 
+
+
+
+void show_grid_draw_rect_mono()
+{
+ int pixel,r,g,b;
+ int x=0,y=0;
+
+ int rmod=1; /*the rectangle modifier. 1 is usually best*/
+
+ SDL_SetRenderDrawColor(renderer,0,0,0,255);
+
+ y=0;
+ while(y<grid_height)
+ {
+  x=0;
+  while(x<grid_width)
+  {
+   pixel=temp_grid.array[x+y*grid_width];
+
+   if(pixel!=0) /*only draw if something is there*/
+   {
+
+    /*set up the rectangle structure with the needed data to square the squares*/
+    rect.x=grid_offset_x+x*block_size+rmod;
+    rect.y=y*block_size+rmod;
+    rect.w=block_size-rmod;
+    rect.h=block_size-rmod;
+
+    SDL_RenderDrawRect(renderer,&rect);
+
+   }
+
+   x+=1;
+  }
+  y+=1;
+ }
+}
 
 
 /*

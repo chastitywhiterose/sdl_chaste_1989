@@ -4,13 +4,55 @@
 this header file is meant to contain all the functions which write things to the screen
 */
 
+void draw_stats_1989()
+{
+ int line=1;
+ text_x=font_size;
 
+ ttf_print("Chaste Tris 1989",font_size*line++,0);
+
+ sprintf(text,"Score %d",score);
+ ttf_print(text,text_x,font_size*line++);
+
+ sprintf(text,"Lines %d",lines_cleared_total);
+ ttf_print(text,text_x,font_size*line++);
+
+ sprintf(text,"This %c",main_block.id);
+ ttf_print(text,text_x,font_size*line++);
+
+ sprintf(text,"Hold %c",hold_block.id);
+ ttf_print(text,text_x,font_size*line++);
+
+ sprintf(text,"Move %d",moves);
+ ttf_print(text,text_x,font_size*line++);
+
+ sprintf(text,"B2B %d",back_to_back);
+ ttf_print(text,text_x,font_size*line++);
+
+ sprintf(text,"Combo %d",combo);
+ ttf_print(text,text_x,font_size*line++);
+
+  time(&time1);
+  
+  seconds=time1-time0; /*subtract current time from start time to get seconds since game started*/
+
+  minutes=seconds/60;
+  seconds%=60;
+  hours=minutes/60;
+  minutes%=60;
+  
+  sprintf(text,"Time %d:%02d:%02d",hours,minutes,seconds);
+  ttf_print(text,text_x,font_size*line++);
+
+  /*sprintf(text,"Frame %d",frame);
+  ttf_print(text,text_x,font_size*line++);*/
+}
+
+/*a function pointer that points to whichever function I currently use to draw the game stats to the screen*/
+void (*stats_func)()=draw_stats_1989;
  
 /*more global variables to be defined before game loop function*/
 int border_size;
-
-
-
 
 /*
 this is a function which is called by main after window is created. It contains the game loop.
@@ -140,8 +182,8 @@ SDL_RenderFillRect(renderer,&rect);
 
  /*end of drawing code for grid*/
 
- /*stats_func();
- draw_input();*/
+ stats_func();
+ /*draw_input();*/
 
 
  /*optionally, get input from another file instead of keyboard if I have this enabled.*/
