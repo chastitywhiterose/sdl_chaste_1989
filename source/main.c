@@ -15,10 +15,11 @@ SDL_Texture *texture;
 char filename[256];
 int w,h;
 
+
 /*variables for SDL_TTF features*/
 char text[0x200];
 TTF_Font *font=NULL;
-int font_size=200;
+int font_size=40;
 char font_filename[256];
 int renderstyle=TTF_STYLE_NORMAL;
 SDL_Color font_color= {0,0,0,255};
@@ -26,31 +27,8 @@ SDL_Surface *text_surface;
 SDL_Texture *text_texture;
 SDL_Rect srcrect,dstrect;
 
-/* Draw a Gimpish background pattern to show transparency in the image */
-static void draw_background(SDL_Renderer *renderer, int w, int h)
-{
-    SDL_Color col[2] = {
-        { 0x66, 0x66, 0x66, 0xff },
-        { 0x99, 0x99, 0x99, 0xff },
-    };
-    int i, x, y;
-    SDL_Rect rect;
-    const int dx = 8, dy = 8;
-
-    rect.w = dx;
-    rect.h = dy;
-    for (y = 0; y < h; y += dy) {
-        for (x = 0; x < w; x += dx) {
-            /* use an 8x8 checkerboard pattern */
-            i = (((x ^ y) >> 3) & 1);
-            SDL_SetRenderDrawColor(renderer, col[i].r, col[i].g, col[i].b, col[i].a);
-
-            rect.x = x;
-            rect.y = y;
-            SDL_RenderFillRect(renderer, &rect);
-        }
-    }
-}
+#include "1989_image.h"
+#include "1989_ttf.h"
 
 int main(int argc, char **argv)
 {
@@ -63,32 +41,17 @@ int main(int argc, char **argv)
  renderer = SDL_CreateRenderer(window,-1,0);
  if(renderer==NULL){printf( "Renderer could not be created! SDL_Error: %s\n", SDL_GetError() );return -1;}
 
- SDL_SetRenderDrawColor(renderer,0,255,0,255);
- SDL_RenderFillRect(renderer,NULL);
-
  printf("SDL Program Compiled Correctly\n");
 
  /*Draw a background pattern in case the image has transparency*/
  draw_background(renderer, width, height);
 
- /* Open the image file */
+ /*fill entire screen with current draw color*/
+ SDL_SetRenderDrawColor(renderer,255,255,255,255);
+ SDL_RenderFillRect(renderer,NULL);
 
- strcpy(filename,"./bitmap/Chastity_Progress_Flag.png");
- texture = IMG_LoadTexture(renderer, filename);
- if (!texture)
- {
-  SDL_Log("Couldn't load %s: %s\n", filename, SDL_GetError());
- }
- else
- {
-  SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-  printf("Image '%s' loaded\n",filename);
-  printf("Texture dimensions w=%d,h=%d\n",w,h);
- }
-
- /* Display the image */
- SDL_RenderCopy(renderer, texture, NULL, NULL);
-
+ /*flag_fill();*/
+ 
  /* Initialize the TTF library */
  if(TTF_Init() < 0)
  {
@@ -96,6 +59,8 @@ int main(int argc, char **argv)
   SDL_Quit();
   return(2);
  }
+
+
 
  strcpy(font_filename,"font/DejaVuSansMono.ttf");
  strcpy(font_filename,"font/editundo.ttf");
@@ -113,49 +78,15 @@ int main(int argc, char **argv)
  }
 
  TTF_SetFontStyle(font, renderstyle);
+ /*TTF_SetFontKerning(font, 1);*/
 
- strcpy(text,"Chastity");
+ strcpy(text,"Chastity White Rose");
 
- TTF_SizeText(font, text, &w, &h);
+font_color.r=0;
+font_color.g=0;
+font_color.b=0;
 
- printf("To render string\n'%s'\nwill be size w=%d,h=%d\n",text,w,h);
-
-font_color.r=255;
-font_color.g=255;
-font_color.b=255;
-
- text_surface=TTF_RenderText_Solid(font, text, font_color);
-
- if(text_surface != NULL)
- {
-  text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
-  SDL_FreeSurface(text_surface);
- }
-
- srcrect.x=0;
- srcrect.y=0;
- srcrect.w=w;
- srcrect.h=h;
-
- dstrect=srcrect;
- dstrect.x=400;
- dstrect.y=280;
-
- SDL_RenderCopy(renderer, text_texture, &srcrect, &dstrect);
-
- SDL_RenderPresent(renderer);
-
- while(loop)
- {
-  while(SDL_PollEvent(&e))
-  {
-   if(e.type == SDL_QUIT){loop=0;}
-   if(e.type == SDL_KEYUP)
-   {
-    if(e.key.keysym.sym==SDLK_ESCAPE){loop=0;}
-   }
-  }
- }
+text_test();
 
  TTF_CloseFont(font);
  TTF_Quit();
