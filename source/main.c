@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "SDL_ttf.h"
+#include <SDL_mixer.h>
 
 /*variables that apply for any program I create that uses SDL2*/
 int width=1280,height=720;
@@ -13,10 +14,10 @@ SDL_Event e;
 /*variables for SDL_image features*/
 SDL_Texture *texture;
 char filename[256];
-int w,h;
+int x,y,w,h;
 
 
-/*variables for SDL_TTF features*/
+/*variables for SDL_ttf features*/
 char text[0x200];
 TTF_Font *font=NULL;
 int font_size=40;
@@ -27,8 +28,24 @@ SDL_Surface *text_surface;
 SDL_Texture *text_texture;
 SDL_Rect srcrect,dstrect;
 
+
+
+/*variables for SDL_mixture features*/
+
+int songs=3,song_index=0,music_is_on=0;
+char *music_files[]=
+{
+ "music/Tetris_Gift_from_Moscow_OC_ReMix.mp3",
+ "music/04 Tetris (feat. Cement City).mp3",
+ "music/01 Tetris (feat. Wish on the Beat).mp3"
+};
+
+Mix_Chunk *music[3]; /*chunks the music is loaded into*/
+
+
 #include "1989_image.h"
 #include "1989_ttf.h"
+#include "1989_mixer.h"
 
 int main(int argc, char **argv)
 {
@@ -86,7 +103,46 @@ font_color.r=0;
 font_color.g=0;
 font_color.b=0;
 
-text_test();
+ /*text_test();*/
+
+
+/*
+ After testing the image and ttf features, we need to initialize all audio this is the section to handle it. First all the music is loaded. Then the mix_test or game is played. At the end, the music is freed and shut down.
+*/
+
+chaste_audio_init(); /*get the audio device ready*/
+
+ /*load all songs*/
+ x=0;
+ while(x<songs)
+ {
+  music[x]=chaste_audio_load(music_files[x]);
+  x++;
+ }
+
+
+ mix_test();
+
+  /*unload and free the music*/
+ x=0;
+ while(x<songs)
+ {
+  if(music[x]!=NULL)
+  {
+   Mix_FreeChunk(music[x]);
+   music[x]=NULL;
+  }
+  x++;
+ }
+ 
+  if (audio_open)
+  {
+   Mix_CloseAudio();
+   audio_open = 0;
+  }
+  /*end of music closing section*/
+
+
 
  TTF_CloseFont(font);
  TTF_Quit();
