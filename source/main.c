@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include "SDL_ttf.h"
@@ -47,13 +48,43 @@ Mix_Chunk *music[3]; /*chunks the music is loaded into*/
 #include "1989_ttf.h"
 #include "1989_mixer.h"
 
+
+/*variables applicable to my Tetris game*/
+
+int fps=60; /*frames per second*/
+
+int frame=0,lastframe=0,delay,framelimit=1; /*only used for animation demos*/
+time_t time0,time1;
+int seconds,minutes,hours; /*to keep track of time*/
+int sdl_time,sdl_time1;
+
+char gamename[256];
+int blocks_used=7;
+SDL_Rect rect;
+
+char text[0x200];
+char movetext[256],move_id;
+int text_x; /*the x position of where text will go*/
+
+FILE *fp; /*to save a file of moves played*/
+char filename[256]; /*name of move log file*/
+FILE *fp_input; /*file to get input from instead of the keyboard*/
+
+#include "1989_chastetris.h"
+#include "1989_gamesave.h"
+
+#include "1989_grid_draw.h"
+#include "1989_input.h"
+#include "1989_polygon.h"
+#include "1989_graphics.h"
+
 int main(int argc, char **argv)
 {
  if(SDL_Init(SDL_INIT_VIDEO))
  {
   printf( "SDL could not initialize! SDL_Error: %s\n",SDL_GetError());return -1;
  }
- window=SDL_CreateWindow("SDL Program",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height,SDL_WINDOW_SHOWN );
+ window=SDL_CreateWindow("Chaste Tris 1989",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height,SDL_WINDOW_SHOWN );
  if(window==NULL){printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );return -1;}
  renderer = SDL_CreateRenderer(window,-1,0);
  if(renderer==NULL){printf( "Renderer could not be created! SDL_Error: %s\n", SDL_GetError() );return -1;}
@@ -65,7 +96,7 @@ int main(int argc, char **argv)
 
  /*fill entire screen with current draw color*/
  SDL_SetRenderDrawColor(renderer,255,255,255,255);
- SDL_RenderFillRect(renderer,NULL);
+ SDL_RenderClear(renderer);
 
  /*flag_fill();*/
  
@@ -114,14 +145,19 @@ chaste_audio_init(); /*get the audio device ready*/
 
  /*load all songs*/
  x=0;
- while(x<songs)
+ while(x>songs)
  {
   music[x]=chaste_audio_load(music_files[x]);
   x++;
  }
 
 
- mix_test();
+ /*mix_test();*/
+
+ song_index=0;
+ chaste_audio_play(music[song_index]);
+
+ sdl_chastetris();
 
   /*unload and free the music*/
  x=0;
