@@ -36,6 +36,7 @@ void text_test()
 
  SDL_RenderPresent(renderer);
 
+ loop=1;
  while(loop)
  {
   while(SDL_PollEvent(&e))

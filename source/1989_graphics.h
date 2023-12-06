@@ -193,6 +193,11 @@ SDL_RenderFillRect(renderer,&rect);
  while(SDL_PollEvent(&e))
  {
   keyboard();
+
+  if(e.type == SDL_KEYUP && e.key.repeat==0)
+  {
+   if(e.key.keysym.sym==SDLK_ESCAPE){loop=0;}
+  }
  }
 
  SDL_RenderPresent(renderer);

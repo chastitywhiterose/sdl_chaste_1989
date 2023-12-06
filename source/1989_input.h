@@ -16,10 +16,11 @@ void keyboard()
 
    switch(key)
    {
+/*
     case SDLK_ESCAPE:
     loop=0;
     break;
-
+*/
     case SDLK_z:
      move_id='Z';
      block_rotate_left_basic();
