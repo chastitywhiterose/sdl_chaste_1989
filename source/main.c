@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include <math.h>
 #include <SDL.h>
@@ -20,7 +21,7 @@ int x,y,w,h;
 
 
 /*variables for SDL_ttf features*/
-char text[0x200];
+char text[0x1000];
 TTF_Font *font=NULL;
 int font_size=40;
 char font_filename[256];
@@ -63,7 +64,6 @@ char gamename[256];
 int blocks_used=7;
 SDL_Rect rect;
 
-char text[0x200];
 char movetext[256],move_id;
 int text_x; /*the x position of where text will go*/
 
@@ -135,7 +135,7 @@ font_color.r=0;
 font_color.g=0;
 font_color.b=0;
 
- /*text_test();*/
+/*ttf_test2();*/
 
 
 /*
@@ -155,7 +155,7 @@ chaste_audio_init(); /*get the audio device ready*/
 
  /*mix_test();*/
 
- song_index=0;
+ song_index=1;
  chaste_audio_play(music[song_index]);
 
 
@@ -173,9 +173,12 @@ chaste_audio_init(); /*get the audio device ready*/
  }
 
 
- image_fill("./bitmap/ChastityWhiteRose_1280x720.png");
+ /*image_fill("./bitmap/ChastityWhiteRose_1280x720.png");*/
+
+ ttf_title_screen();
+
  sdl_chastetris();
- image_fill("./bitmap/Chastity_Progress_Flag.png");
+ /*image_fill("./bitmap/Chastity_Progress_Flag.png");*/
 
   /*
   After the game ends, we will attempt to save the movelog to a file.
