@@ -1,0 +1,1 @@
+This folder contains 8x8 images which are meant to resemble the Gameboy Tetris blocks. The game still works without them but will simple draw black squares if these are not loaded as textures for display.
