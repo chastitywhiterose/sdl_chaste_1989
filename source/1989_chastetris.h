@@ -456,6 +456,12 @@ void tetris_next_block()
  block_type++;  block_type%=blocks_used;
 }
 
+/*use the number of moves to set which block comes next*/
+void tetris_next_block_random()
+{
+ block_type=moves%7;
+}
+
 
 void tetris_set_block()
 {
@@ -486,7 +492,7 @@ void tetris_set_block()
  if(lines_cleared_last>0){tetris_fall_lines();}
 
 
- tetris_next_block();
+ tetris_next_block_random();
  spawn_block();
 
 

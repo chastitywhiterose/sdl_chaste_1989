@@ -13,8 +13,8 @@ char *gb_blocks[]=
  "./bitmap/gb/t.png",
  "./bitmap/gb/z.png",
  "./bitmap/gb/j.png",
- "./bitmap/gb/l.png",
  "./bitmap/gb/o.png",
+ "./bitmap/gb/l.png",
  "./bitmap/gb/s.png",
 };
 
@@ -42,14 +42,6 @@ void show_grid_gameboy()
 
     SDL_SetRenderDrawColor(renderer,r,g,b,255);
 
-    /*set up the rectangle structure with the needed data to square the squares*/
-    rect.x=grid_offset_x+x*block_size;
-    rect.y=y*block_size;
-    rect.w=block_size;
-    rect.h=block_size;
-
-    SDL_RenderFillRect(renderer,&rect);
-
     srcrect.x=0;
     srcrect.y=0;
     srcrect.w=8;
@@ -59,6 +51,34 @@ void show_grid_gameboy()
     dstrect.y=y*block_size;
     dstrect.w=block_size;
     dstrect.h=block_size;
+
+    /*SDL_RenderFillRect(renderer,&dstrect);*/
+
+   /*use the color of the pixel as a switch to select the right block index*/
+   switch(pixel)
+   {
+    case 0x00FFFF:
+     texture_index=0;
+    break;
+    case 0xFF00FF:
+     texture_index=1;
+    break;
+    case 0xFF0000:
+     texture_index=2;
+    break;
+    case 0x0000FF:
+     texture_index=3;
+    break;
+    case 0xFFFF00:
+     texture_index=4;
+    break;
+    case 0xFF7F00:
+     texture_index=5;
+    break;
+    case 0x00FF00:
+     texture_index=6;
+    break;
+   }
 
     SDL_RenderCopy(renderer, block_texture[texture_index], &srcrect, &dstrect);
    }

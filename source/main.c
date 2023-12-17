@@ -10,6 +10,7 @@
 /*variables that apply for any program I create that uses SDL2*/
 int width=1280,height=720;
 int loop=1;
+int Window_Flags=0;
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Event e;
@@ -79,6 +80,41 @@ FILE *fp_input; /*file to get input from instead of the keyboard*/
 
 int main(int argc, char **argv)
 {
+
+
+/*process command line arguments*/
+ int x=1,y;
+ while(x<argc)
+ {
+  printf("argv[%i]=%s\n",x,argv[x]);
+
+  if(strcmp(argv[x],"-fullscreen")==0)
+  {
+   width=1920;height=1080;
+   Window_Flags=SDL_WINDOW_FULLSCREEN_DESKTOP;
+  }
+
+  if( strcmp(argv[x],"-fps")==0 )
+  {
+   printf("Default fps is %d\n",fps);
+   return 1;
+  }
+
+  if( strncmp(argv[x],"-fps=",5)==0 )
+  {
+   printf("Changing fps:\n");
+   y=sscanf(argv[x]+5,"%d",&fps);
+   if(y)
+   {
+    printf("fps is now set to %d\n",fps);
+   }
+  }
+
+  x++;
+ }
+
+
+
  if(SDL_Init(SDL_INIT_VIDEO))
  {
   printf( "SDL could not initialize! SDL_Error: %s\n",SDL_GetError());return -1;
@@ -145,7 +181,7 @@ chaste_audio_init(); /*get the audio device ready*/
  x=0;
  while(x<songs)
  {
-  /*music[x]=chaste_audio_load(music_files[x]);*/
+  music[x]=chaste_audio_load(music_files[x]);
   x++;
  }
 
@@ -153,7 +189,7 @@ chaste_audio_init(); /*get the audio device ready*/
  /*mix_test();*/
 
  song_index=1;
- /*chaste_audio_play(music[song_index]);*/
+ chaste_audio_play(music[song_index]);
 
 
  sprintf(filename,"imovelog.txt");
