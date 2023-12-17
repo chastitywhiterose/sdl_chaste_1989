@@ -243,6 +243,12 @@ SDL_RenderFillRect(renderer,&rect);
   sdl_time=SDL_GetTicks();
  }
 
+  if(!Mix_Playing(0)) /*if music is no longer playing*/
+  {
+   song_index=(song_index+1)%songs; /*go to next song*/
+   chaste_audio_play(music[song_index]); /*start the music at the current song index*/
+  }
+
  frame++;
 
  }
