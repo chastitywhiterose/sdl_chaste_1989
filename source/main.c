@@ -31,8 +31,6 @@ SDL_Surface *text_surface;
 SDL_Texture *text_texture;
 SDL_Rect srcrect,dstrect;
 
-
-
 /*variables for SDL_mixture features*/
 
 int songs=3,song_index=0,music_is_on=0;
@@ -73,8 +71,8 @@ FILE *fp_input; /*file to get input from instead of the keyboard*/
 
 #include "1989_chastetris.h"
 #include "1989_gamesave.h"
-
 #include "1989_grid_draw.h"
+#include "1989_gameboy.h"
 #include "1989_input.h"
 #include "1989_polygon.h"
 #include "1989_graphics.h"
@@ -111,7 +109,6 @@ int main(int argc, char **argv)
 
 
 
- strcpy(font_filename,"font/DejaVuSansMono.ttf");
  strcpy(font_filename,"font/editundo.ttf");
 
  font = TTF_OpenFont(font_filename, font_size);
@@ -124,10 +121,10 @@ int main(int argc, char **argv)
  else
  {
   printf("font file '%s'loaded\n",font_filename);
+  TTF_SetFontStyle(font, renderstyle);
+  TTF_SetFontKerning(font, 0);
  }
 
- TTF_SetFontStyle(font, renderstyle);
- /*TTF_SetFontKerning(font, 1);*/
 
  strcpy(text,"Chastity White Rose");
 
@@ -148,7 +145,7 @@ chaste_audio_init(); /*get the audio device ready*/
  x=0;
  while(x<songs)
  {
-  music[x]=chaste_audio_load(music_files[x]);
+  /*music[x]=chaste_audio_load(music_files[x]);*/
   x++;
  }
 
@@ -156,7 +153,7 @@ chaste_audio_init(); /*get the audio device ready*/
  /*mix_test();*/
 
  song_index=1;
- chaste_audio_play(music[song_index]);
+ /*chaste_audio_play(music[song_index]);*/
 
 
  sprintf(filename,"imovelog.txt");
@@ -176,6 +173,11 @@ chaste_audio_init(); /*get the audio device ready*/
  /*image_fill("./bitmap/ChastityWhiteRose_1280x720.png");*/
 
  ttf_title_screen();
+
+/*try to load the gameboy blocks*/
+load_gameboy_blocks();
+
+
 
  sdl_chastetris();
  /*image_fill("./bitmap/Chastity_Progress_Flag.png");*/
